@@ -77,7 +77,7 @@ def main():
     st.session_state.processComplete = True
 
     if st.session_state.processComplete == True:
-        user_question = st.chat_input("Ask Question about your files.")
+        user_question = st.chat_input("Ask Question.")
         logger.info(f"User Question= {user_question}")
         if user_question:
             handel_userinput(user_question, st.session_state.vectorstore)
