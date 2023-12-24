@@ -29,10 +29,11 @@ def _format_chat_history(chat_history: List[Tuple]) -> str:
 
 
 def get_conversation_chain(vectorstore, openai_key):
-    num_chunks=10
+    num_chunks=30
 
     prompt_template="""
     As a research expert in semantic segmentation of diagnostic medical images, you have access to the following paragraphs from a survey paper on this topic. You need to answer the query by analyzing the paragraphs and extracting relevant information.
+    If you doon't able to find any relevant information, then return: "How can I help you? Please ask question related to 'Semantic Segmentation of Diagnostic Medical Images: Recent Trends and Challenges'".
 
     ## Paragraphs:
     {context}
@@ -43,13 +44,13 @@ def get_conversation_chain(vectorstore, openai_key):
     ## Answer:
     •  Format your answer as bullet points or sentences, depending on the query.
 
-    •  Cite facts and evidence from the paragraphs to back up your answer.
+    •  If possible, cite facts and evidence from the paragraphs to back up your answer.
     """
     mprompt_url = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"], validate_template=False)
     chain_type_kwargs = {"prompt": mprompt_url}
 
-    chat_llm = ChatOpenAI(model = "gpt-3.5-turbo", openai_api_key = openai_key , temperature=0.3)
+    chat_llm = ChatOpenAI(model = "gpt-3.5-turbo-16k", openai_api_key = openai_key , temperature=0.3)
     multiqa_retriever = MultiQueryRetriever.from_llm(llm=chat_llm, 
                                          retriever=vectorstore.as_retriever(search_kwargs={"k": num_chunks}))
     qa = RetrievalQA.from_chain_type(llm=chat_llm, 

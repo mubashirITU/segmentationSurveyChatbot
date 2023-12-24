@@ -39,9 +39,9 @@ def handel_userinput(user_question,vectorstore):
 
 def main():
     load_dotenv()
-    st.set_page_config(page_title="Chat with survey paper")
+    st.set_page_config(page_title="DMIS chatbot")
 
-    st.header("Survey GPT")
+    st.header("DMIS Chatbot")
 
     if "conversation" not in st.session_state:
         st.session_state.conversation = None
@@ -64,7 +64,7 @@ def main():
     if not openai_api_key:
         st.info("Please add your OpenAI API key to continue.")
         st.stop()
-    vectordb_folder_path = 'segmentation_survey'
+    vectordb_folder_path = 'dmis_chatbot'
 
     if st.session_state.vectorstore == None:
         vetorestore = load_local_vectordb_using_qdrant(vectordb_folder_path,embeddings,qdrant_url,qdrant_api_key)
@@ -77,7 +77,7 @@ def main():
     st.session_state.processComplete = True
 
     if st.session_state.processComplete == True:
-        user_question = st.chat_input("Ask Question.")
+        user_question = st.chat_input("Ask Question about your files.")
         logger.info(f"User Question= {user_question}")
         if user_question:
             handel_userinput(user_question, st.session_state.vectorstore)
